@@ -1,0 +1,1 @@
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\EmailProviderDemo.exe.config
