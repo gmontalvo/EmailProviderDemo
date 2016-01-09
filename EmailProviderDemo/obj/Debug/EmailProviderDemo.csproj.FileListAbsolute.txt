@@ -1,1 +1,16 @@
 C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\EmailProviderDemo.exe.config
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\obj\Debug\EmailProviderDemo.csprojResolveAssemblyReference.cache
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\obj\Debug\EmailProviderDemo.Form1.resources
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\obj\Debug\EmailProviderDemo.Properties.Resources.resources
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\obj\Debug\EmailProviderDemo.csproj.GenerateResource.Cache
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\EmailProviderDemo.exe
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\EmailProviderDemo.pdb
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\SendGrid.dll
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\SendGrid.SmtpApi.dll
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\SendGridMail.dll
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\obj\Debug\EmailProviderDemo.exe
+C:\Users\Greg\Documents\GitHub\EmailProviderDemo\EmailProviderDemo\obj\Debug\EmailProviderDemo.pdb

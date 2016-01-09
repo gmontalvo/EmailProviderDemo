@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Mail;
 
-namespace ConsoleApplication1
+namespace EmailProviderDemo
 {
     class ProviderSendGrid : IEmailProvider
     {
