@@ -11,5 +11,7 @@ namespace EmailProviderDemo
 
         string Subject { get; set; }
         string Body { get; set; }
+
+        void Send();
     }
 }

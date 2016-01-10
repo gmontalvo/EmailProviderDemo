@@ -1,6 +1,9 @@
 ﻿using SendGrid;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Net;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace EmailProviderDemo
 {
@@ -33,7 +36,14 @@ namespace EmailProviderDemo
         public string Body
         {
             get { return _message.Html; }
-            set { _message.Html = value; }
+            set { _message.Html = value; _message.Text = Regex.Replace(value, "<.*?>", string.Empty); }
+        }
+
+        public void Send()
+        {
+            NetworkCredential credentials = new NetworkCredential("gmontalvo", ConfigurationManager.AppSettings[GetType().Name]);
+            Web transport = new Web(credentials);
+            transport.DeliverAsync(_message);
         }
     }
 }

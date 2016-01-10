@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="basicHttpBinding" name="BrontoSoapApiImplServiceSoapBinding1">
+    <bindingConfiguration bindingType="basicHttpBinding" name="BrontoSoapApiImplServiceSoapBinding">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BrontoSoapApiImplServiceSoapBinding1</serializedValue>
+          <serializedValue>BrontoSoapApiImplServiceSoapBinding</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

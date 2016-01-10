@@ -22,11 +22,25 @@ namespace EmailProviderDemo
             foreach (EmailProviderFactory.ProviderType provider in EmailProviderFactory.GetProviders())
             {
                 IEmailProvider email = EmailProviderFactory.Get(provider);
-                comboBox1.Items.Add(email.GetType().Name.Replace("Provider", string.Empty));
+                _sendProviders.Items.Add(email.GetType().Name.Replace("Provider", string.Empty));
             }
 
-            if (comboBox1.Items.Count > 0)
-                comboBox1.SelectedIndex = 0;
+            if (_sendProviders.Items.Count > 0)
+                _sendProviders.SelectedIndex = 0;
+        }
+
+        private void _send_Click(object sender, EventArgs e)
+        {
+            EmailProviderFactory.ProviderType[] providers = EmailProviderFactory.GetProviders().ToArray();
+            EmailProviderFactory.ProviderType provider = providers[_sendProviders.SelectedIndex];
+            IEmailProvider email = EmailProviderFactory.Get(provider);
+
+            email.From = _from.Text;
+            email.AddTo(new List<string>(_to.Text.Split(';')));
+            email.Subject = _subject.Text;
+            email.Body = _message.Text;
+
+            email.Send();
         }
     }
 }
