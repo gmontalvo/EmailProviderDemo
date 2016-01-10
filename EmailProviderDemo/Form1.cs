@@ -17,30 +17,16 @@ namespace EmailProviderDemo
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             foreach (EmailProviderFactory.ProviderType provider in EmailProviderFactory.GetProviders())
             {
                 IEmailProvider email = EmailProviderFactory.Get(provider);
-
-                // Add the message properties.
-                email.From = "john@example.com";
-
-                // Add multiple addresses to the To field.
-                List<String> recipients = new List<String>
-                {
-                    @"Jeff Smith <jeff@example.com>",
-                    @"Anna Lidman <anna@example.com>",
-                    @"Peter Saddow <peter@example.com>",
-                };
-
-                email.AddTo(recipients);
-                email.Subject = string.Format("Testing the {0} Provider", email.GetType().Name);
-
-                //Add the HTML and Text bodies
-                email.Body = "<p>Hello World!</p>";
+                comboBox1.Items.Add(email.GetType().Name);
             }
 
+            if (comboBox1.Items.Count > 0)
+                comboBox1.SelectedIndex = 0;
         }
     }
 }
