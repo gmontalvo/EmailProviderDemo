@@ -22,7 +22,7 @@ namespace EmailProviderDemo
             foreach (EmailProviderFactory.ProviderType provider in EmailProviderFactory.GetProviders())
             {
                 IEmailProvider email = EmailProviderFactory.Get(provider);
-                comboBox1.Items.Add(email.GetType().Name);
+                comboBox1.Items.Add(email.GetType().Name.Replace("Provider", string.Empty));
             }
 
             if (comboBox1.Items.Count > 0)
