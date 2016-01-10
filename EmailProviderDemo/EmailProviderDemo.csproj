@@ -487,6 +487,12 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FuelSDK-CSharp\FuelSDK-CSharp\FuelSDK-CSharp.csproj">
+      <Project>{50281782-fa9f-44b3-a073-3759a5ca1cd8}</Project>
+      <Name>FuelSDK-CSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

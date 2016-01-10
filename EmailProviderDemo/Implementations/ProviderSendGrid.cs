@@ -9,41 +9,44 @@ namespace EmailProviderDemo
 {
     class ProviderSendGrid : IEmailProvider
     {
-        SendGridMessage _message = new SendGridMessage();
+        SendGridMessage _email = new SendGridMessage();
 
         public string From
         {
-            get { return _message.From.Address; }
-            set { _message.From = new MailAddress(value);  }
+            get { return _email.From.Address; }
+            set { _email.From = new MailAddress(value);  }
         }
 
         public void AddTo(string email)
         {
-            _message.AddTo(email);
+            _email.AddTo(email);
         }
 
         public void AddTo(List<string> emails)
         {
-            _message.AddTo(emails);
+            _email.AddTo(emails);
         }
 
         public string Subject
         {
-            get { return _message.Subject; }
-            set { _message.Subject = value; }
+            get { return _email.Subject; }
+            set { _email.Subject = value; }
         }
 
         public string Body
         {
-            get { return _message.Html; }
-            set { _message.Html = value; _message.Text = Regex.Replace(value, "<.*?>", string.Empty); }
+            get { return _email.Html; }
+            set { _email.Html = value; _email.Text = Regex.Replace(value, "<.*?>", string.Empty); }
         }
 
         public void Send()
         {
+            _email.EnableClickTracking();
+            _email.EnableOpenTracking();
+
             NetworkCredential credentials = new NetworkCredential("gmontalvo", ConfigurationManager.AppSettings[GetType().Name]);
             Web transport = new Web(credentials);
-            transport.DeliverAsync(_message);
+            transport.DeliverAsync(_email).Wait();
         }
     }
 }
