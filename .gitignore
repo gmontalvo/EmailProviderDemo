@@ -232,3 +232,8 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# Sub-Project (FuelSDK)
+# use git clone https://github.com/salesforce-marketingcloud/FuelSDK-CSharp.git
+# from root of project to add FuelSDK
+FuelSDK-CSharp/
