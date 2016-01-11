@@ -39,8 +39,8 @@ namespace EmailProviderDemo
             _email.EnableClickTracking();
             _email.EnableOpenTracking();
 
-            _email.Html = _email.Html.Replace("\r\n", "<br>");
             _email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
+            _email.Html = _email.Html.Replace("\r\n", "<br>");
 
             Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
             transport.DeliverAsync(_email);

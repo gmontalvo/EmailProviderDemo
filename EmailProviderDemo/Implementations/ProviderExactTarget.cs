@@ -45,8 +45,8 @@ namespace EmailProviderDemo
             _email.IsHTMLPaste = true;
             _email.SyncTextWithHTML = true;
 
-            _email.HTMLBody = _email.HTMLBody.Replace("\r\n", "<br>");
             _email.TextBody = Regex.Replace(_email.HTMLBody, "<.*?>", string.Empty);
+            _email.HTMLBody = _email.HTMLBody.Replace("\r\n", "<br>");
 
             _email.Post();
         }
