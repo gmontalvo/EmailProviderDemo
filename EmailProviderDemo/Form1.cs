@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 namespace EmailProviderDemo
 {
+    using Provider = EmailProviderFactory.ProviderType;
+
     public partial class Form1 : Form
     {
         public Form1()
@@ -19,7 +21,7 @@ namespace EmailProviderDemo
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            foreach (EmailProviderFactory.ProviderType provider in EmailProviderFactory.GetProviders())
+            foreach (Provider provider in EmailProviderFactory.GetProviders())
             {
                 IEmailProvider email = EmailProviderFactory.Get(provider);
                 _sendProviders.Items.Add(email.GetType().Name.Replace("Provider", string.Empty));
@@ -31,12 +33,12 @@ namespace EmailProviderDemo
 
         private void _send_Click(object sender, EventArgs e)
         {
-            EmailProviderFactory.ProviderType[] providers = EmailProviderFactory.GetProviders().ToArray();
-            EmailProviderFactory.ProviderType provider = providers[_sendProviders.SelectedIndex];
+            Provider[] providers = EmailProviderFactory.GetProviders().ToArray();
+            Provider provider = providers[_sendProviders.SelectedIndex];
             IEmailProvider email = EmailProviderFactory.Get(provider);
 
             email.From = _from.Text;
-            email.AddTo(new List<string>(_to.Text.Split(';')));
+            email.AddTo(_to.Text.Split(';').ToList());
             email.Subject = _subject.Text;
             email.Body = _message.Text;
 

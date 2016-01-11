@@ -17,11 +17,6 @@ namespace EmailProviderDemo
             set { _email.From = new MailAddress(value);  }
         }
 
-        public void AddTo(string email)
-        {
-            _email.AddTo(email);
-        }
-
         public void AddTo(List<string> emails)
         {
             _email.AddTo(emails);
@@ -41,10 +36,11 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            _email.Html = _email.Html.Replace("\r\n", "<br>");
-            _email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
             _email.EnableClickTracking();
             _email.EnableOpenTracking();
+
+            _email.Html = _email.Html.Replace("\r\n", "<br>");
+            _email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
 
             Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
             transport.DeliverAsync(_email);

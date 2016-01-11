@@ -15,19 +15,27 @@ namespace EmailProviderDemo
 
         static public IEmailProvider Get(ProviderType provider)
         {
+            IEmailProvider email = null;
+
             switch (provider)
             {
-                case ProviderType.Bronto:
-                    return new ProviderBronto();
+            case ProviderType.Bronto:
+                email = new ProviderBronto();
+                break;
 
-                case ProviderType.ExactTarget:
-                    return new ProviderExactTarget();
+            case ProviderType.ExactTarget:
+                email = new ProviderExactTarget();
+                break;
 
-                case ProviderType.SendGrid:
-                    return new ProviderSendGrid();
+            case ProviderType.SendGrid:
+                email = new ProviderSendGrid();
+                break;
+
+            default:
+                throw new ArgumentException("Unknown ProviderType");
             }
 
-            throw new ArgumentException("Unknown ProviderType");
+            return email;
         }
 
         static public IEnumerable<ProviderType> GetProviders()

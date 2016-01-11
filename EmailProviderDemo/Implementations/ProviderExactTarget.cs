@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace EmailProviderDemo
 {
@@ -13,11 +15,6 @@ namespace EmailProviderDemo
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
-        }
-
-        public void AddTo(string email)
-        {
-            throw new NotImplementedException();
         }
 
         public void AddTo(List<string> emails)
@@ -39,21 +36,19 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            _email.EmailType = "HTML";
-            _email.IsHTMLPaste = true;
-            _email.SyncTextWithHTML = true; 
-            _email.AuthStub = CreateClient();
-
-            _email.Post();
-        }
-
-        private ET_Client CreateClient()
-        {
             NameValueCollection collection = new NameValueCollection();
             collection.Add("clientId", "GM TODO");
-            collection.Add("clientSecret", "GM TODO");
+            collection.Add("clientSecret", ConfigurationManager.AppSettings[GetType().Name]);
+            _email.AuthStub = new ET_Client(collection);
 
-            return new ET_Client(collection);
+            _email.EmailType = "HTML";
+            _email.IsHTMLPaste = true;
+            _email.SyncTextWithHTML = true;
+
+            _email.HTMLBody = _email.HTMLBody.Replace("\r\n", "<br>");
+            _email.TextBody = Regex.Replace(_email.HTMLBody, "<.*?>", string.Empty);
+
+            _email.Post();
         }
     }
 }
