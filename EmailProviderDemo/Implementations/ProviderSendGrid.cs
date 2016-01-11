@@ -36,17 +36,18 @@ namespace EmailProviderDemo
         public string Body
         {
             get { return _email.Html; }
-            set { _email.Html = value; _email.Text = Regex.Replace(value, "<.*?>", string.Empty); }
+            set { _email.Html = value; }
         }
 
         public void Send()
         {
+            _email.Html = _email.Html.Replace("\r\n", "<br>");
+            _email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
             _email.EnableClickTracking();
             _email.EnableOpenTracking();
 
-            NetworkCredential credentials = new NetworkCredential("gmontalvo", ConfigurationManager.AppSettings[GetType().Name]);
-            Web transport = new Web(credentials);
-            transport.DeliverAsync(_email).Wait();
+            Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
+            transport.DeliverAsync(_email);
         }
     }
 }
