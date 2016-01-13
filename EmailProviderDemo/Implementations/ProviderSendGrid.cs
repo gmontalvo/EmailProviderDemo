@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EmailProviderDemo
@@ -38,22 +39,27 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            //string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(7));
-            //string end = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+            Test();
 
-            //Client client = new Client(ConfigurationManager.AppSettings[GetType().Name]);
-            //HttpResponseMessage result = client.GlobalStats.Get(start, end, "day").Result;
+            //_email.EnableClickTracking();
+            //_email.EnableOpenTracking();
 
-            //MessageBox.Show("");
+            //_email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
+            //_email.Html = _email.Html.Replace("\r\n", "<br>");
 
-            _email.EnableClickTracking();
-            _email.EnableOpenTracking();
+            //Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
+            //transport.DeliverAsync(_email);
+        }
 
-            _email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
-            _email.Html = _email.Html.Replace("\r\n", "<br>");
+        public async void Test()
+        {
+            string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(7));
+            string end = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
 
-            Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
-            transport.DeliverAsync(_email);
+            Client client = new Client(ConfigurationManager.AppSettings[GetType().Name]);
+            HttpResponseMessage response = await client.GlobalStats.Get(start, end, "day");
+
+            MessageBox.Show("");
         }
     }
 }
