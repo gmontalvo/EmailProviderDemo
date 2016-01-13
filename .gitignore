@@ -237,3 +237,10 @@ _Pvt_Extensions
 # use git clone https://github.com/salesforce-marketingcloud/FuelSDK-CSharp.git
 # from root of project to add FuelSDK
 FuelSDK-CSharp/
+
+
+# Sub-Project (SendGrid)
+# use git clone https://github.com/sendgrid/sendgrid-csharp.git
+# from root of project to add SendGrid
+sendgrid-csharp/
+

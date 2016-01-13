@@ -1,9 +1,11 @@
 ﻿using SendGrid;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace EmailProviderDemo
 {
@@ -36,6 +38,14 @@ namespace EmailProviderDemo
 
         public void Send()
         {
+            //string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(7));
+            //string end = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+
+            //Client client = new Client(ConfigurationManager.AppSettings[GetType().Name]);
+            //HttpResponseMessage result = client.GlobalStats.Get(start, end, "day").Result;
+
+            //MessageBox.Show("");
+
             _email.EnableClickTracking();
             _email.EnableOpenTracking();
 

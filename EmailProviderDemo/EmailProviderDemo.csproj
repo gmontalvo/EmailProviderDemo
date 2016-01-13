@@ -36,14 +36,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SendGrid">
-      <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGrid.dll</HintPath>
-    </Reference>
     <Reference Include="SendGrid.SmtpApi">
       <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
-    </Reference>
-    <Reference Include="SendGridMail">
-      <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGridMail.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -491,6 +485,14 @@
     <ProjectReference Include="..\FuelSDK-CSharp\FuelSDK-CSharp\FuelSDK-CSharp.csproj">
       <Project>{50281782-fa9f-44b3-a073-3759a5ca1cd8}</Project>
       <Name>FuelSDK-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\sendgrid-csharp\SendGrid\SendGridMail\Mail.csproj">
+      <Project>{3c687bef-ff50-44ad-8315-2d4237281af8}</Project>
+      <Name>Mail</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\sendgrid-csharp\SendGrid\SendGrid\SendGrid.csproj">
+      <Project>{1c318867-440b-4eb9-99e3-c0cc2c556962}</Project>
+      <Name>SendGrid</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
