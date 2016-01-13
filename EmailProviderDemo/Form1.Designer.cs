@@ -42,8 +42,13 @@
             this._sendProviders = new System.Windows.Forms.ComboBox();
             this._send = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this._statsProviders = new System.Windows.Forms.ComboBox();
+            this._query = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -184,6 +189,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.listView1);
+            this.tabPage2.Controls.Add(this._query);
+            this.tabPage2.Controls.Add(this._statsProviders);
+            this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -192,13 +201,50 @@
             this.tabPage2.Text = "Statistics";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(46, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Provider";
+            // 
+            // _statsProviders
+            // 
+            this._statsProviders.FormattingEnabled = true;
+            this._statsProviders.Location = new System.Drawing.Point(59, 6);
+            this._statsProviders.Name = "_statsProviders";
+            this._statsProviders.Size = new System.Drawing.Size(138, 21);
+            this._statsProviders.TabIndex = 2;
+            // 
+            // _query
+            // 
+            this._query.Location = new System.Drawing.Point(203, 6);
+            this._query.Name = "_query";
+            this._query.Size = new System.Drawing.Size(75, 23);
+            this._query.TabIndex = 11;
+            this._query.Text = "&Query";
+            this._query.UseVisualStyleBackColor = true;
+            // 
+            // listView1
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listView1.Location = new System.Drawing.Point(10, 35);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(536, 376);
+            this.listView1.TabIndex = 12;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 561);
             this.Controls.Add(this.tabControl1);
-            this.MinimumSize = new System.Drawing.Size(300, 300);
+            this.MinimumSize = new System.Drawing.Size(600, 600);
             this.Name = "Form1";
             this.ShowIcon = false;
             this.Text = "EmailProviderDemo";
@@ -206,6 +252,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -226,6 +274,10 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox _to;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox _statsProviders;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button _query;
+        private System.Windows.Forms.ListView listView1;
 
     }
 }
