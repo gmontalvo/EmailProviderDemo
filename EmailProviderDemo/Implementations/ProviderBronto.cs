@@ -35,7 +35,7 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-             //Get session id using api token
+            //Get session id using api token
             String sessionId = _client.login(ConfigurationManager.AppSettings[GetType().Name]);
             MessageBox.Show(sessionId);
 
@@ -78,8 +78,11 @@ namespace EmailProviderDemo
             messageContentObject[] _messagelist = new messageContentObject[] { _message };
 
             messageObject _mo = new messageObject();
-            _mo.name = "EmailProviderDemo message";
+            _mo.name = "EmailProviderDemo_message_csharp";
             _mo.content = _messagelist;
+
+            messageObject[] _molist = new messageObject[] { _mo };
+            _client.addMessages(header, _molist);
 
 
             stringValue _strv = new stringValue();
@@ -113,8 +116,8 @@ namespace EmailProviderDemo
 
             deliveryObject[] _dolist = new deliveryObject[] { _do };
 
-            writeResult _res =  _client.addDeliveries(header, _dolist);
-            
+            writeResult _res = _client.addDeliveries(header, _dolist);
+
             MessageBox.Show(_res.results[0].id);
 
 
