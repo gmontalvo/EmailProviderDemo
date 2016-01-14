@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
+using EmailProviderDemo.Bronto;
+using System.Windows.Forms;
 
 namespace EmailProviderDemo
 {
@@ -33,7 +33,38 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            throw new NotImplementedException();
+             //Get session id using api token
+            String sessionId = _client.login(ConfigurationManager.AppSettings[GetType().Name]);
+            MessageBox.Show(sessionId);
+
+            // session header contains sessionId to make further calls
+            sessionHeader header = new sessionHeader();
+            header.sessionId = sessionId;
+
+            // create a contact object, that represents an email in Bronto
+            contactObject pradeep = new contactObject();
+            pradeep.email = "pradeep.macharla@inmar.com";
+            
+            // create collection of contact objects
+            contactObject[] contacts = new contactObject[]{pradeep};
+
+            //add contacts collection to client
+            writeResult _result = _client.addContacts(header, contacts);
+
+            stringValue _strv = new stringValue();
+            _strv.value = "pradeep.macharla@inmar.com";
+
+            //wideopen filter
+            contactFilter _filter = new contactFilter();
+            _filter.type = filterType.OR;
+            _filter.email = new stringValue[]{_strv};
+
+
+            //contactObject[] readContacts = _client.readContacts(_filter, false, "", 1);
+
+
+            MessageBox.Show(_result.results[0].id);
+            
         }
     }
 }
