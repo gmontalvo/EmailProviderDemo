@@ -244,3 +244,5 @@ FuelSDK-CSharp/
 # from root of project to add SendGrid
 sendgrid-csharp/
 
+# temporarily ignoring app.config
+EmailProviderDemo/App.config

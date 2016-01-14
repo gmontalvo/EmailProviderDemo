@@ -66,7 +66,7 @@ namespace EmailProviderDemo
             read.pageNumber = 1;
 
             contactObject[] readContacts = _client.readContacts(header, read);
-            MessageBox.Show(readContacts[0].email);
+            //MessageBox.Show(readContacts[0].email);
         }
     }
 }
