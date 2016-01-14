@@ -61,12 +61,12 @@ namespace EmailProviderDemo
             _filter.type = filterType.OR;
             _filter.email = new stringValue[]{_strv};
 
+            readContacts read = new readContacts();
+            read.filter = _filter;
+            read.pageNumber = 1;
 
-            //contactObject[] readContacts = _client.readContacts(_filter, false, "", 1);
-
-
-            MessageBox.Show(_result.results[0].id);
-            
+            contactObject[] readContacts = _client.readContacts(header, read);
+            MessageBox.Show(readContacts[0].email);
         }
     }
 }
