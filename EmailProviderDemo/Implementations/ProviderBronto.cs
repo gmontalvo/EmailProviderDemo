@@ -8,6 +8,8 @@ namespace EmailProviderDemo
 {
     class ProviderBronto : IEmailProvider
     {
+	
+		BrontoSoapPortTypeClient _client = new BrontoSoapPortTypeClient();
         public string From
         {
             get { throw new NotImplementedException(); }
