@@ -120,5 +120,10 @@ namespace EmailProviderDemo
 
 
         }
+
+        public IEnumerable<IMetricsProvider> GetMetrics()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

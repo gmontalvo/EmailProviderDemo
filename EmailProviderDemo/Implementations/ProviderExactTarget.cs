@@ -144,5 +144,10 @@ namespace EmailProviderDemo
             //return srSend;
             // }        
         }
+
+        public IEnumerable<IMetricsProvider> GetMetrics()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

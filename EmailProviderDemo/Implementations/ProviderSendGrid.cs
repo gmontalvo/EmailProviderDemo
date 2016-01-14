@@ -1,8 +1,12 @@
-﻿using SendGrid;
+﻿using Newtonsoft.Json.Linq;
+using SendGrid;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace EmailProviderDemo
 {
@@ -45,13 +49,47 @@ namespace EmailProviderDemo
             transport.DeliverAsync(_email);
         }
 
-        //public async void Test()
-        //{
-        //    string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(7));
-        //    string end = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+        public IEnumerable<IMetricsProvider> GetMetrics()
+        {
+            List<IMetricsProvider> list = new List<IMetricsProvider>();
+            string payload = string.Empty;
+            
+            Task.Run(new Action(() =>
+            {
+                payload = GetPayload().Result;
+            })).Wait();
 
-        //    Client client = new Client(ConfigurationManager.AppSettings[GetType().Name]);
-        //    HttpResponseMessage response = await client.GlobalStats.Get(start, end, "day");
-        //}
+            JArray jobjects = JArray.Parse(payload);
+
+            foreach (JObject jobject in jobjects)
+            {
+                ProviderMetrics item = new ProviderMetrics();
+                item.Name = (string)jobject["date"];
+
+                JArray stats = (JArray)jobject["stats"];
+                JObject metrics = (JObject)stats[0]["metrics"];
+
+                item.Bounces = (int)metrics["bounces"];
+                item.Clicks = (int)metrics["clicks"];
+                item.Opens = (int)metrics["opens"];
+                item.Sends = (int)metrics["delivered"];
+                item.Unsubscribes = (int)metrics["unsubscribes"];
+
+                list.Add(item);
+            }
+            
+            return list;
+        }
+
+        private async Task<string> GetPayload()
+        {
+            string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(7));
+            string end = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+
+            Client client = new Client(ConfigurationManager.AppSettings[GetType().Name]);
+            HttpResponseMessage response = await client.GlobalStats.Get(start, end, "day");
+
+            return await response.Content.ReadAsStringAsync();
+        }
     }
 }

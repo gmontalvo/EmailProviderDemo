@@ -11,5 +11,6 @@ namespace EmailProviderDemo
         string Body { get; set; }
 
         void Send();
+        IEnumerable<IMetricsProvider> GetMetrics();
     }
 }
