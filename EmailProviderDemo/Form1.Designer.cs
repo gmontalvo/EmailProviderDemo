@@ -43,15 +43,15 @@
             this._send = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this._metrics = new System.Windows.Forms.ListView();
-            this._load = new System.Windows.Forms.Button();
-            this._statsProviders = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this._load = new System.Windows.Forms.Button();
+            this._statsProviders = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -222,10 +222,42 @@
             this._metrics.FullRowSelect = true;
             this._metrics.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this._metrics.Location = new System.Drawing.Point(10, 35);
+            this._metrics.MultiSelect = false;
             this._metrics.Name = "_metrics";
             this._metrics.Size = new System.Drawing.Size(536, 441);
-            this._metrics.TabIndex = 12;
+            this._metrics.TabIndex = 2;
             this._metrics.UseCompatibleStateImageBehavior = false;
+            this._metrics.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 85;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Bounces";
+            this.columnHeader2.Width = 85;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Clicks";
+            this.columnHeader3.Width = 85;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Opens";
+            this.columnHeader4.Width = 85;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Sends";
+            this.columnHeader5.Width = 85;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Unsubscribes";
+            this.columnHeader6.Width = 85;
             // 
             // _load
             // 
@@ -233,7 +265,7 @@
             this._load.Location = new System.Drawing.Point(471, 482);
             this._load.Name = "_load";
             this._load.Size = new System.Drawing.Size(75, 23);
-            this._load.TabIndex = 11;
+            this._load.TabIndex = 3;
             this._load.Text = "&Load";
             this._load.UseVisualStyleBackColor = true;
             this._load.Click += new System.EventHandler(this._load_Click);
@@ -244,7 +276,7 @@
             this._statsProviders.Location = new System.Drawing.Point(59, 6);
             this._statsProviders.Name = "_statsProviders";
             this._statsProviders.Size = new System.Drawing.Size(138, 21);
-            this._statsProviders.TabIndex = 2;
+            this._statsProviders.TabIndex = 1;
             // 
             // label6
             // 
@@ -252,32 +284,8 @@
             this.label6.Location = new System.Drawing.Point(7, 10);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(46, 13);
-            this.label6.TabIndex = 1;
+            this.label6.TabIndex = 0;
             this.label6.Text = "Provider";
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Name";
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Bounces";
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Clicks";
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Opens";
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Sends";
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Unsubscribes";
             // 
             // Form1
             // 

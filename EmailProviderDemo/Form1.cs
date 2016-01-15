@@ -52,13 +52,21 @@ namespace EmailProviderDemo
 
         private void _load_Click(object sender, EventArgs e)
         {
+            _metrics.Items.Clear();
+
             Provider[] providers = EmailProviderFactory.GetProviders().ToArray();
             Provider provider = providers[_statsProviders.SelectedIndex];
             IEmailProvider email = EmailProviderFactory.Get(provider);
 
             foreach(IMetricsProvider metric in email.GetMetrics())
             {
-                _metrics.Items.Add(metric.Name);
+                ListViewItem item = _metrics.Items.Add(metric.Name);
+
+                item.SubItems.Add(Convert.ToString(metric.Bounces));
+                item.SubItems.Add(Convert.ToString(metric.Clicks));
+                item.SubItems.Add(Convert.ToString(metric.Opens));
+                item.SubItems.Add(Convert.ToString(metric.Sends));
+                item.SubItems.Add(Convert.ToString(metric.Unsubscribes));
             }
         }
     }
