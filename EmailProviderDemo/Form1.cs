@@ -24,11 +24,16 @@ namespace EmailProviderDemo
             foreach (Provider provider in EmailProviderFactory.GetProviders())
             {
                 IEmailProvider email = EmailProviderFactory.Get(provider);
+
                 _sendProviders.Items.Add(email.GetType().Name.Replace("Provider", string.Empty));
+                _statsProviders.Items.Add(email.GetType().Name.Replace("Provider", string.Empty));
             }
 
             if (_sendProviders.Items.Count > 0)
                 _sendProviders.SelectedIndex = 0;
+
+            if (_statsProviders.Items.Count > 0)
+                _statsProviders.SelectedIndex = 0;
         }
 
         private void _send_Click(object sender, EventArgs e)
@@ -43,6 +48,18 @@ namespace EmailProviderDemo
             email.Body = _message.Text;
 
             email.Send();
+        }
+
+        private void _load_Click(object sender, EventArgs e)
+        {
+            Provider[] providers = EmailProviderFactory.GetProviders().ToArray();
+            Provider provider = providers[_statsProviders.SelectedIndex];
+            IEmailProvider email = EmailProviderFactory.Get(provider);
+
+            foreach(IMetricsProvider metric in email.GetMetrics())
+            {
+                _metrics.Items.Add(metric.Name);
+            }
         }
     }
 }

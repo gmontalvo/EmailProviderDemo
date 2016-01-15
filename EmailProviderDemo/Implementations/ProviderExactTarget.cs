@@ -14,9 +14,9 @@ namespace EmailProviderDemo
 
         public string From { get; set; }
 
-        public void AddTo(List<string> emails)
+        public void AddTo(IEnumerable<string> emails)
         {
-            _subscribers = emails;
+            _subscribers = emails.ToList();
         }
 
         public string Subject { get; set; }

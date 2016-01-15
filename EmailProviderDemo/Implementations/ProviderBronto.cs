@@ -16,7 +16,7 @@ namespace EmailProviderDemo
             set { throw new NotImplementedException(); }
         }
 
-        public void AddTo(List<string> emails)
+        public void AddTo(IEnumerable<string> emails)
         {
             throw new NotImplementedException();
         }

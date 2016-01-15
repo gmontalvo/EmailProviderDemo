@@ -20,7 +20,7 @@ namespace EmailProviderDemo
             set { _email.From = new MailAddress(value);  }
         }
 
-        public void AddTo(List<string> emails)
+        public void AddTo(IEnumerable<string> emails)
         {
             _email.AddTo(emails);
         }
@@ -52,12 +52,10 @@ namespace EmailProviderDemo
         public IEnumerable<IMetricsProvider> GetMetrics()
         {
             List<IMetricsProvider> list = new List<IMetricsProvider>();
+
             string payload = string.Empty;
-            
-            Task.Run(new Action(() =>
-            {
-                payload = GetPayload().Result;
-            })).Wait();
+            Task task = Task.Run(new Action(() => { payload = GetPayload().Result; }));
+            task.Wait();
 
             JArray jobjects = JArray.Parse(payload);
 

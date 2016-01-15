@@ -42,10 +42,16 @@
             this._sendProviders = new System.Windows.Forms.ComboBox();
             this._send = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label6 = new System.Windows.Forms.Label();
+            this._metrics = new System.Windows.Forms.ListView();
+            this._load = new System.Windows.Forms.Button();
             this._statsProviders = new System.Windows.Forms.ComboBox();
-            this._query = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.label6 = new System.Windows.Forms.Label();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -179,7 +185,7 @@
             // _send
             // 
             this._send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._send.Location = new System.Drawing.Point(471, 482);
+            this._send.Location = new System.Drawing.Point(477, 482);
             this._send.Name = "_send";
             this._send.Size = new System.Drawing.Size(75, 23);
             this._send.TabIndex = 10;
@@ -189,8 +195,8 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.listView1);
-            this.tabPage2.Controls.Add(this._query);
+            this.tabPage2.Controls.Add(this._metrics);
+            this.tabPage2.Controls.Add(this._load);
             this.tabPage2.Controls.Add(this._statsProviders);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -201,14 +207,36 @@
             this.tabPage2.Text = "Statistics";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // label6
+            // _metrics
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(46, 13);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "Provider";
+            this._metrics.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._metrics.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4,
+            this.columnHeader5,
+            this.columnHeader6});
+            this._metrics.FullRowSelect = true;
+            this._metrics.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this._metrics.Location = new System.Drawing.Point(10, 35);
+            this._metrics.Name = "_metrics";
+            this._metrics.Size = new System.Drawing.Size(536, 441);
+            this._metrics.TabIndex = 12;
+            this._metrics.UseCompatibleStateImageBehavior = false;
+            // 
+            // _load
+            // 
+            this._load.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._load.Location = new System.Drawing.Point(471, 482);
+            this._load.Name = "_load";
+            this._load.Size = new System.Drawing.Size(75, 23);
+            this._load.TabIndex = 11;
+            this._load.Text = "&Load";
+            this._load.UseVisualStyleBackColor = true;
+            this._load.Click += new System.EventHandler(this._load_Click);
             // 
             // _statsProviders
             // 
@@ -218,31 +246,44 @@
             this._statsProviders.Size = new System.Drawing.Size(138, 21);
             this._statsProviders.TabIndex = 2;
             // 
-            // _query
+            // label6
             // 
-            this._query.Location = new System.Drawing.Point(203, 6);
-            this._query.Name = "_query";
-            this._query.Size = new System.Drawing.Size(75, 23);
-            this._query.TabIndex = 11;
-            this._query.Text = "&Query";
-            this._query.UseVisualStyleBackColor = true;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(46, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Provider";
             // 
-            // listView1
+            // columnHeader1
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listView1.Location = new System.Drawing.Point(10, 35);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(536, 376);
-            this.listView1.TabIndex = 12;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.columnHeader1.Text = "Name";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Bounces";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Clicks";
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Opens";
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Sends";
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Unsubscribes";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 561);
+            this.ClientSize = new System.Drawing.Size(584, 562);
             this.Controls.Add(this.tabControl1);
             this.MinimumSize = new System.Drawing.Size(600, 600);
             this.Name = "Form1";
@@ -276,8 +317,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox _statsProviders;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button _query;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.Button _load;
+        private System.Windows.Forms.ListView _metrics;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
 
     }
 }
