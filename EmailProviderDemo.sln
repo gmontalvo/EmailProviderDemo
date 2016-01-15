@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailProviderDemo", "EmailProviderDemo\EmailProviderDemo.csproj", "{10E6602B-9709-4E5C-9FAE-7A735DD235B3}"
 EndProject
@@ -10,11 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail", "sendgrid-csharp\SendGrid\SendGridMail\Mail.csproj", "{3C687BEF-FF50-44AD-8315-2D4237281AF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuelSDK-CSharp", "FuelSDK-CSharp\FuelSDK-CSharp\FuelSDK-CSharp.csproj", "{50281782-FA9F-44B3-A073-3759A5CA1CD8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{62DEA0A1-F7E2-403C-9691-1C51F4A1B14E}"
-	ProjectSection(SolutionItems) = preProject
-		Readme.txt = Readme.txt
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
