@@ -46,7 +46,7 @@ namespace EmailProviderDemo
             _email.Html = _email.Html.Replace("\r\n", "<br>");
 
             Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
-            transport.DeliverAsync(_email);
+            transport.DeliverAsync(_email).ConfigureAwait(false);
         }
 
         public IEnumerable<IMetricsProvider> GetMetrics()
