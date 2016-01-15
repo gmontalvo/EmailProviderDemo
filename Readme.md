@@ -1,5 +1,14 @@
 # Email Provider Demo
 
+# Background
+
+Tasked with developing an application that demonstrates API usage across several email service providers, I was disappointed at the dirth of availability of such code online.  I decided to put together a simple .NET application that demonstrates the following:
+1. Create an email, and send it to a list of recipients
+2. Query back statistics for the email send
+
+Since several vendors are involved, I coded to the least common denominator.  The whole purpose of the app, however, is to demonstrate the easiest use case - and not to demonstrate the full array of features for any specific vendor.
+
+Final note ... since several vendors offer their SDK in GitHub, I used the source (vs. NuGet) in the project.  As a result, the build is a bit wonky, but it works on my machine!  ;-)
 
 ## Build Instructions
 
