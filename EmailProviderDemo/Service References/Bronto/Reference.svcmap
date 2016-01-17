@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="25629b7c-81dd-43aa-abb5-27d8fc6ce5bd" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="10377cd4-2bab-4c57-a73e-cf3db1d49736" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,7 +22,7 @@
     <MetadataSource Address="https://api.bronto.com/v4?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="BrontoSoapApiImplService.wsdl" MetadataType="Wsdl" ID="c78934bd-bcac-4511-8f16-19bd3aab2e2f" SourceId="1" SourceUrl="https://api.bronto.com/v4?wsdl" />
+    <MetadataFile FileName="BrontoSoapApiImplService.wsdl" MetadataType="Wsdl" ID="f3886d28-61fb-46dc-ab2d-c4d330fe5563" SourceId="1" SourceUrl="https://api.bronto.com/v4?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -24,10 +24,10 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            From = "gregory.montalvo@inmar.com";
+            From = "pradeep.macharla@inmar.com";
             Subject = "Test";
             Body = "<b>BOLD TEXT</b>\r\n\r\ntest\r\ntest\r\ntest\r\n";
-            _emails.Add("pradeep.macharla@inmar.com");
+            _emails = new List<string>() { "gregory.montalvo@inmar.com" };
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -41,39 +41,20 @@ namespace EmailProviderDemo
 
             ///////////////////////////////////////////////////////////////////
             //
-            // create the list of recipients
+            // add recipients to contact list
             //
             ///////////////////////////////////////////////////////////////////
 
-            List<stringValue> recipientValues = new List<stringValue>();
+            List<contactObject> contactValues = new List<contactObject>();
 
             foreach(string email in _emails)
             {
-                stringValue recipientValue = new stringValue();
-                recipientValue.value = email;
-
-                recipientValues.Add(recipientValue);
+                contactObject co = new contactObject();
+                co.email = email;
+                contactValues.Add(co);
             }
 
-            ///////////////////////////////////////////////////////////////////
-            //
-            // TODO: add recipients to contact list ??
-            //
-            ///////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////
-            //
-            // query the contact list to determine contact ID's
-            //
-            ///////////////////////////////////////////////////////////////////
-
-            contactFilter cf = new contactFilter();
-            cf.type = filterType.OR;
-            cf.email = recipientValues.ToArray();
-
-            readContacts rc = new readContacts();
-            rc.filter = cf;
-            contactObject[] contacts = client.readContacts(header, rc);
+            writeResult contacts = client.addOrUpdateContacts(header, contactValues.ToArray());
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -83,11 +64,12 @@ namespace EmailProviderDemo
 
             List<deliveryRecipientObject> recipients = new List<deliveryRecipientObject>();
 
-            foreach(contactObject contact in contacts)
+            foreach(resultItem item in contacts.results)
             {
                 deliveryRecipientObject recipient = new deliveryRecipientObject();
                 recipient.type = "contact";
-                recipient.id = contact.id;
+                recipient.deliveryType = "selected";
+                recipient.id = item.id;
 
                 recipients.Add(recipient);
             }
@@ -104,30 +86,10 @@ namespace EmailProviderDemo
             mco.type = "html";
 
             messageObject mo = new messageObject();
-            mo.name = Convert.ToString(Guid.NewGuid());
+            mo.name = string.Format("{0:yyyy-MM-dd HH:mm:ss}", DateTime.Now);
             mo.content = new messageContentObject[] { mco };
 
-            messageObject[] messages = new messageObject[] { mo };
-            client.addMessages(header, messages);
-
-            ///////////////////////////////////////////////////////////////////
-            //
-            // query the message list to determine message ID's
-            //
-            ///////////////////////////////////////////////////////////////////
-
-            stringValue messageValue = new stringValue();
-            messageValue.@operator = filterOperator.Contains;
-            messageValue.value = mo.name;
-
-            messageFilter mf = new messageFilter();
-            mf.name = new stringValue[] { messageValue };
-            mf.type = filterType.OR;
-
-            readMessages rm = new readMessages();
-            rm.filter = mf;
-            rm.includeContent = false;
-            messages = client.readMessages(header, rm);
+            writeResult messages = client.addMessages(header, new messageObject[] { mo });
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -137,15 +99,19 @@ namespace EmailProviderDemo
 
             List<deliveryObject> deliveries = new List<deliveryObject>();
 
-            foreach (messageObject message in messages)
+            foreach(resultItem item in messages.results)
             {
                 deliveryObject delivery = new deliveryObject();
+                delivery.startSpecified = true;
                 delivery.start = DateTime.Now;
-                delivery.type = "triggered";
+                delivery.messageId = item.id;
+                delivery.type = "transactional";
                 delivery.fromEmail = From;
-                delivery.replyEmail = From;
                 delivery.fromName = From.Substring(0, From.IndexOf('@'));
-                delivery.messageId = message.id;
+                delivery.replyEmail = From;
+                delivery.authentication = false;
+                delivery.replyTracking = false;
+                delivery.optin = false;
                 delivery.recipients = recipients.ToArray();
 
                 deliveries.Add(delivery);
