@@ -24,11 +24,6 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            From = "pradeep.macharla@inmar.com";
-            Subject = "Test";
-            Body = "<b>BOLD TEXT</b>\r\n\r\ntest\r\ntest\r\ntest\r\n";
-            _emails = new List<string>() { "gregory.montalvo@inmar.com" };
-
             ///////////////////////////////////////////////////////////////////
             //
             // login, which creates the requisite header
@@ -68,7 +63,6 @@ namespace EmailProviderDemo
             {
                 deliveryRecipientObject recipient = new deliveryRecipientObject();
                 recipient.type = "contact";
-                recipient.deliveryType = "selected";
                 recipient.id = item.id;
 
                 recipients.Add(recipient);
@@ -102,23 +96,18 @@ namespace EmailProviderDemo
             foreach(resultItem item in messages.results)
             {
                 deliveryObject delivery = new deliveryObject();
-                delivery.startSpecified = true;
                 delivery.start = DateTime.Now;
+                delivery.startSpecified = true;
                 delivery.messageId = item.id;
-                delivery.type = "transactional";
                 delivery.fromEmail = From;
                 delivery.fromName = From.Substring(0, From.IndexOf('@'));
-                delivery.replyEmail = From;
-                delivery.authentication = false;
-                delivery.replyTracking = false;
-                delivery.optin = false;
                 delivery.recipients = recipients.ToArray();
 
                 deliveries.Add(delivery);
             }
 
             // send the deliveries!
-            client.addDeliveries(header, deliveries.ToArray());
+            client.addDeliveriesAsync(header, deliveries.ToArray());
         }
 
         public IEnumerable<IMetricsProvider> GetMetrics()
