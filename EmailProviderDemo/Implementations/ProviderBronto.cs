@@ -1,151 +1,163 @@
-﻿using System;
+﻿using EmailProviderDemo.Bronto;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
-using EmailProviderDemo.Bronto;
-using System.Windows.Forms;
 
 namespace EmailProviderDemo
 {
     class ProviderBronto : IEmailProvider
     {
+        List<string> _emails = new List<string>();
 
-        BrontoSoapPortTypeClient _client = new BrontoSoapPortTypeClient();
-        public string From
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
+        public string From { get; set; }
 
         public void AddTo(IEnumerable<string> emails)
         {
-            throw new NotImplementedException();
+            foreach(string email in emails)
+            {
+                _emails.Add(email);
+            }
         }
 
-        public string Subject
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public string Body
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
+        public string Subject { get; set; }
+        public string Body { get; set; }
 
         public void Send()
         {
-            //Get session id using api token
-            String sessionId = _client.login(ConfigurationManager.AppSettings[GetType().Name]);
-            MessageBox.Show(sessionId);
+            From = "gregory.montalvo@inmar.com";
+            Subject = "Test";
+            Body = "<b>BOLD TEXT</b>\r\n\r\ntest\r\ntest\r\ntest\r\n";
+            _emails.Add("pradeep.macharla@inmar.com");
 
-            // session header contains sessionId to make further calls
+            ///////////////////////////////////////////////////////////////////
+            //
+            // login, which creates the requisite header
+            //
+            ///////////////////////////////////////////////////////////////////
+
             sessionHeader header = new sessionHeader();
-            header.sessionId = sessionId;
+            BrontoSoapPortTypeClient client = new BrontoSoapPortTypeClient();
+            header.sessionId = client.login(ConfigurationManager.AppSettings[GetType().Name]);
 
-            /*
-            // create a contact object, that represents an email in Bronto
-            contactObject pradeep = new contactObject();
-            pradeep.email = "pradeep.macharla@inmar.com";
-            
-            // create collection of contact objects
-            contactObject[] contacts = new contactObject[]{pradeep};
+            ///////////////////////////////////////////////////////////////////
+            //
+            // create the list of recipients
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            //add contacts collection to client
-            writeResult _result = _client.addContacts(header, contacts);
+            List<stringValue> recipientValues = new List<stringValue>();
 
-            stringValue _strv = new stringValue();
-            _strv.value = "pradeep.macharla@inmar.com";
+            foreach(string email in _emails)
+            {
+                stringValue recipientValue = new stringValue();
+                recipientValue.value = email;
 
-            //wideopen filter
-            contactFilter _filter = new contactFilter();
-            _filter.type = filterType.OR;
-            _filter.email = new stringValue[]{_strv};
+                recipientValues.Add(recipientValue);
+            }
 
-            readContacts read = new readContacts();
-            read.filter = _filter;
-            read.pageNumber = 1;
+            ///////////////////////////////////////////////////////////////////
+            //
+            // TODO: add recipients to contact list ??
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            contactObject[] readContacts = _client.readContacts(header, read);
-            MessageBox.Show(readContacts[0].email);
-            */
+            ///////////////////////////////////////////////////////////////////
+            //
+            // query the contact list to determine contact ID's
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            //messageContentObject _message = new messageContentObject();
-            //_message.subject = "Sent from EmailProviderDemo";
-            //_message.content = "Test mail from EmailProviderDemo";
-            //_message.type = "text";
+            contactFilter cf = new contactFilter();
+            cf.type = filterType.OR;
+            cf.email = recipientValues.ToArray();
 
-            //messageContentObject[] _messagelist = new messageContentObject[] { _message };
+            readContacts rc = new readContacts();
+            rc.filter = cf;
+            contactObject[] contacts = client.readContacts(header, rc);
 
-            //messageObject _mo = new messageObject();
-            //_mo.name = "EmailProviderDemo_message_csharp";
-            //_mo.content = _messagelist;
+            ///////////////////////////////////////////////////////////////////
+            //
+            // using list of contacts, create list of recipients
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            //messageObject[] _molist = new messageObject[] { _mo };
-            //_client.addMessages(header, _molist);
+            List<deliveryRecipientObject> recipients = new List<deliveryRecipientObject>();
 
-            messageFilter _mf = new messageFilter();
+            foreach(contactObject contact in contacts)
+            {
+                deliveryRecipientObject recipient = new deliveryRecipientObject();
+                recipient.type = "contact";
+                recipient.id = contact.id;
 
-            stringValue _strv0 = new stringValue();
-            _strv0.@operator = filterOperator.EqualTo;
-            _strv0.value = "stringValue";
+                recipients.Add(recipient);
+            }
 
-            _mf.name = new stringValue[] { _strv0 };
-            _mf.type = filterType.OR;
-            //_mf.id = new String[] { "290291" };
+            ///////////////////////////////////////////////////////////////////
+            //
+            // add email to message list
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            readMessages _rdm = new readMessages();
-            _rdm.filter = _mf;
-            _rdm.includeContent = false;
-            _rdm.pageNumber = 1;
-            messageObject[] _readcurrentmessages = _client.readMessages(header, _rdm);
+            messageContentObject mco = new messageContentObject();
+            mco.subject = Subject;
+            mco.content = Body.Replace("\r\n", "<br>");
+            mco.type = "html";
 
+            messageObject mo = new messageObject();
+            mo.name = Convert.ToString(Guid.NewGuid());
+            mo.content = new messageContentObject[] { mco };
 
-            stringValue _strv = new stringValue();
-            _strv.value = "pradeep.macharla@inmar.com";
-            //wideopen filter
-            contactFilter _filter = new contactFilter();
-            _filter.type = filterType.OR;
-            _filter.email = new stringValue[] { _strv };
-            readContacts read = new readContacts();
-            read.filter = _filter;
-            read.pageNumber = 1;
-            contactObject[] readContacts = _client.readContacts(header, read);
+            messageObject[] messages = new messageObject[] { mo };
+            client.addMessages(header, messages);
 
+            ///////////////////////////////////////////////////////////////////
+            //
+            // query the message list to determine message ID's
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            deliveryRecipientObject _dr = new deliveryRecipientObject();
-            //_dr.deliveryType = "selected";
-            _dr.type = "contact";
-            _dr.id = readContacts[0].id;
-            MessageBox.Show(_dr.id);
+            stringValue messageValue = new stringValue();
+            messageValue.@operator = filterOperator.Contains;
+            messageValue.value = mo.name;
 
-            deliveryRecipientObject[] _recipientlist = new deliveryRecipientObject[] { _dr };
+            messageFilter mf = new messageFilter();
+            mf.name = new stringValue[] { messageValue };
+            mf.type = filterType.OR;
 
-            deliveryObject _do = new deliveryObject();
-            _do.start = DateTime.Now;
-            // values are bulk(aka. regular), test, automated, split, transactional, triggered,ftaf. Only [triggered,test,transactional] can be used
-            // with addDeliveries and updateDeliveries
-            _do.type = "triggered";
-            _do.messageId = "e1510af7-b8f2-40e7-bfd3-5a23b9f77f1d";
-            _do.fromEmail = "Gregory.Montalvo@inmar.com";
-            _do.fromName = "Greg Montalvo";
-            _do.replyEmail = "Gregory.Montalvo@inmar.com";
-            //_do.content = _messagelist;
-            _do.recipients = _recipientlist;
+            readMessages rm = new readMessages();
+            rm.filter = mf;
+            rm.includeContent = false;
+            messages = client.readMessages(header, rm);
 
+            ///////////////////////////////////////////////////////////////////
+            //
+            // using list of messages, create list of deliveries
+            //
+            ///////////////////////////////////////////////////////////////////
 
-            deliveryObject[] _dolist = new deliveryObject[] { _do };
-            writeResult _res = _client.addDeliveries(header, _dolist);
+            List<deliveryObject> deliveries = new List<deliveryObject>();
 
-            MessageBox.Show(_res.results[0].id);
+            foreach (messageObject message in messages)
+            {
+                deliveryObject delivery = new deliveryObject();
+                delivery.start = DateTime.Now;
+                delivery.type = "triggered";
+                delivery.fromEmail = From;
+                delivery.replyEmail = From;
+                delivery.fromName = From.Substring(0, From.IndexOf('@'));
+                delivery.messageId = message.id;
+                delivery.recipients = recipients.ToArray();
 
+                deliveries.Add(delivery);
+            }
 
-
+            // send the deliveries!
+            client.addDeliveries(header, deliveries.ToArray());
         }
 
         public IEnumerable<IMetricsProvider> GetMetrics()
         {
-            throw new NotImplementedException();
+            return new List<IMetricsProvider>();
         }
     }
 }
