@@ -185,7 +185,7 @@
             // _send
             // 
             this._send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._send.Location = new System.Drawing.Point(477, 482);
+            this._send.Location = new System.Drawing.Point(471, 482);
             this._send.Name = "_send";
             this._send.Size = new System.Drawing.Size(75, 23);
             this._send.TabIndex = 10;
