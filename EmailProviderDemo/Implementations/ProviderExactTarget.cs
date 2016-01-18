@@ -10,13 +10,20 @@ namespace EmailProviderDemo
 {
     class ProviderExactTarget : IEmailProvider
     {
-        List<string> _subscribers = new List<string>();
+        List<string> _emails = new List<string>();
+        Dictionary<int, string> _names = new Dictionary<int, string>();
 
         public string From { get; set; }
 
         public void AddTo(IEnumerable<string> emails)
         {
-            _subscribers = emails.ToList();
+            foreach(string email in emails)
+            {
+                if (!_emails.Contains(email))
+                {
+                    _emails.Add(email);
+                }
+            }
         }
 
         public string Subject { get; set; }
@@ -24,20 +31,19 @@ namespace EmailProviderDemo
 
         public void Send()
         {
-            NameValueCollection collection = new NameValueCollection();
-            collection.Add("clientId", "e0rp4uc9gouydey7fem6hhmb");
-            collection.Add("clientSecret", ConfigurationManager.AppSettings[GetType().Name]);
-            ET_Client client = new ET_Client(collection);
-
             List<ET_Subscriber> subscribers = new List<ET_Subscriber>();
 
-            _subscribers.ForEach(subscriber =>
+            foreach (string email in _emails)
             {
-                subscribers.Add(new ET_Subscriber() { EmailAddress = subscriber, SubscriberKey = subscriber });
-            });
+                ET_Subscriber subscriber = new ET_Subscriber();
+                subscriber.EmailAddress = email;
+                subscriber.SubscriberKey = email;
+
+                subscribers.Add(subscriber);
+            }
 
             ET_TriggeredSend triggered = new ET_TriggeredSend();
-            triggered.AuthStub = client;
+            triggered.AuthStub = CreateClient();
             triggered.Subscribers = subscribers.ToArray();
 
             for (int i = 0; i < triggered.Subscribers.Length; i++)
@@ -147,7 +153,197 @@ namespace EmailProviderDemo
 
         public IEnumerable<IMetricsProvider> GetMetrics()
         {
-            throw new NotImplementedException();
+            Dictionary<int, ProviderMetrics> dictionary = new Dictionary<int,ProviderMetrics>();
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // setup variables used throughout the routine
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_Client client = CreateClient();
+
+            string[] properties = new string[]
+            {
+                "EventDate",
+                "SendID",
+            };
+
+            DateTime end = DateTime.Now;
+            DateTime start = end - TimeSpan.FromDays(7);
+
+            SimpleFilterPart filter = new SimpleFilterPart();
+            filter.Property = "EventDate";
+            filter.SimpleOperator = SimpleOperators.between;
+            filter.DateValue = new DateTime[] { start, end };
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // count bounces
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_BounceEvent bounce = new ET_BounceEvent();
+            bounce.GetSinceLastBatch = false;
+            bounce.AuthStub = client;
+            bounce.SearchFilter = filter;
+            bounce.Props = properties;
+
+            GetReturn results = bounce.Get();
+
+            foreach (ET_BounceEvent item in results.Results)
+            {
+                if (!dictionary.ContainsKey(item.SendID))
+                {
+                    dictionary[item.SendID] = new ProviderMetrics();
+                    dictionary[item.SendID].Name = GetEmailName(client, item.SendID);
+                }
+
+                dictionary[item.SendID].Bounces++;
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // count clicks
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_ClickEvent click = new ET_ClickEvent();
+            click.GetSinceLastBatch = false;
+            click.AuthStub = client;
+            click.SearchFilter = filter;
+            click.Props = properties;
+
+            results = click.Get();
+
+            foreach (ET_ClickEvent item in results.Results)
+            {
+                if (!dictionary.ContainsKey(item.SendID))
+                {
+                    dictionary[item.SendID] = new ProviderMetrics();
+                    dictionary[item.SendID].Name = GetEmailName(client, item.SendID);
+                }
+
+                dictionary[item.SendID].Clicks++;
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // count opens
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_OpenEvent open = new ET_OpenEvent();
+            open.GetSinceLastBatch = false;
+            open.AuthStub = client;
+            open.SearchFilter = filter;
+            open.Props = properties;
+
+            results = open.Get();
+
+            foreach (ET_OpenEvent item in results.Results)
+            {
+                if (!dictionary.ContainsKey(item.SendID))
+                {
+                    dictionary[item.SendID] = new ProviderMetrics();
+                    dictionary[item.SendID].Name = GetEmailName(client, item.SendID);
+                }
+
+                dictionary[item.SendID].Opens++;
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // count sends
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_SentEvent send = new ET_SentEvent();
+            send.GetSinceLastBatch = false;
+            send.AuthStub = client;
+            send.SearchFilter = filter;
+            send.Props = properties;
+
+            results = send.Get();
+
+            foreach (ET_SentEvent item in results.Results)
+            {
+                if (!dictionary.ContainsKey(item.SendID))
+                {
+                    dictionary[item.SendID] = new ProviderMetrics();
+                    dictionary[item.SendID].Name = GetEmailName(client, item.SendID);
+                }
+
+                dictionary[item.SendID].Sends++;
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // count unsubscribes
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_UnsubEvent unsubscribe = new ET_UnsubEvent();
+            unsubscribe.GetSinceLastBatch = false;
+            unsubscribe.AuthStub = client;
+            unsubscribe.SearchFilter = filter;
+            unsubscribe.Props = properties;
+
+            results = unsubscribe.Get();
+
+            foreach (ET_UnsubEvent item in results.Results)
+            {
+                if (!dictionary.ContainsKey(item.SendID))
+                {
+                    dictionary[item.SendID] = new ProviderMetrics();
+                    dictionary[item.SendID].Name = GetEmailName(client, item.SendID);
+                }
+
+                dictionary[item.SendID].Unsubscribes++;
+            }
+
+            return dictionary.Values;
+        }
+
+        private ET_Client CreateClient()
+        {
+            NameValueCollection collection = new NameValueCollection();
+            collection.Add("clientId", "e0rp4uc9gouydey7fem6hhmb");
+            collection.Add("clientSecret", ConfigurationManager.AppSettings[GetType().Name]);
+
+            return new ET_Client(collection);
+        }
+
+        private string GetEmailName(ET_Client client, int sendID)
+        {
+            if (!_names.ContainsKey(sendID))
+            {
+                ET_Send send = new ET_Send();
+                send.AuthStub = client;
+
+                send.Props = new string[]
+                {
+                    "ID",
+                    "EmailName",
+                };
+
+                send.SearchFilter = new SimpleFilterPart()
+                {
+                    Property = "ID",
+                    SimpleOperator = SimpleOperators.equals,
+                    Value = new string[] { Convert.ToString(sendID) },
+                };
+
+                GetReturn results = send.Get();
+
+                if (results.Results.Length > 0)
+                {
+                    ET_Send item = (ET_Send)results.Results[0];
+                    _names[sendID] = item.EmailName.Trim();
+                }
+            }
+
+            return _names[sendID];
         }
     }
 }

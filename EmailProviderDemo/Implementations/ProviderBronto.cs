@@ -15,7 +15,10 @@ namespace EmailProviderDemo
         {
             foreach(string email in emails)
             {
-                _emails.Add(email);
+                if (!_emails.Contains(email))
+                {
+                    _emails.Add(email);
+                }
             }
         }
 
