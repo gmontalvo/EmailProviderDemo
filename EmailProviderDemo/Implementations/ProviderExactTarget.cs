@@ -25,7 +25,7 @@ namespace EmailProviderDemo
         public void Send()
         {
             NameValueCollection collection = new NameValueCollection();
-            collection.Add("clientId", "GM TODO");
+            collection.Add("clientId", "e0rp4uc9gouydey7fem6hhmb");
             collection.Add("clientSecret", ConfigurationManager.AppSettings[GetType().Name]);
             ET_Client client = new ET_Client(collection);
 
