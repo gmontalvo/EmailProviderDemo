@@ -52,9 +52,12 @@
             this._load = new System.Windows.Forms.Button();
             this._statsProviders = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
+            this._days = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._days)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -195,6 +198,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this._days);
             this.tabPage2.Controls.Add(this._metrics);
             this.tabPage2.Controls.Add(this._load);
             this.tabPage2.Controls.Add(this._statsProviders);
@@ -225,7 +230,7 @@
             this._metrics.MultiSelect = false;
             this._metrics.Name = "_metrics";
             this._metrics.Size = new System.Drawing.Size(536, 441);
-            this._metrics.TabIndex = 2;
+            this._metrics.TabIndex = 4;
             this._metrics.UseCompatibleStateImageBehavior = false;
             this._metrics.View = System.Windows.Forms.View.Details;
             // 
@@ -265,7 +270,7 @@
             this._load.Location = new System.Drawing.Point(471, 482);
             this._load.Name = "_load";
             this._load.Size = new System.Drawing.Size(75, 23);
-            this._load.TabIndex = 3;
+            this._load.TabIndex = 5;
             this._load.Text = "&Load";
             this._load.UseVisualStyleBackColor = true;
             this._load.Click += new System.EventHandler(this._load_Click);
@@ -287,6 +292,32 @@
             this.label6.TabIndex = 0;
             this.label6.Text = "Provider";
             // 
+            // _days
+            // 
+            this._days.Location = new System.Drawing.Point(251, 7);
+            this._days.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this._days.Name = "_days";
+            this._days.Size = new System.Drawing.Size(57, 20);
+            this._days.TabIndex = 3;
+            this._days.Value = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(214, 10);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(31, 13);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "Days";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +334,7 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._days)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -333,6 +365,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown _days;
 
     }
 }

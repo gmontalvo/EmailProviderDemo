@@ -151,7 +151,7 @@ namespace EmailProviderDemo
             // }        
         }
 
-        public IEnumerable<IMetricsProvider> GetMetrics()
+        public IEnumerable<IMetricsProvider> GetMetrics(int days)
         {
             Dictionary<int, ProviderMetrics> dictionary = new Dictionary<int,ProviderMetrics>();
 
@@ -170,7 +170,7 @@ namespace EmailProviderDemo
             };
 
             DateTime end = DateTime.Now;
-            DateTime start = end - TimeSpan.FromDays(7);
+            DateTime start = end - TimeSpan.FromDays(days);
 
             SimpleFilterPart filter = new SimpleFilterPart();
             filter.Property = "EventDate";

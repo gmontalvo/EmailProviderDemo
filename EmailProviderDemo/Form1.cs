@@ -58,7 +58,7 @@ namespace EmailProviderDemo
             Provider provider = providers[_statsProviders.SelectedIndex];
             IEmailProvider email = EmailProviderFactory.Get(provider);
 
-            foreach(IMetricsProvider metric in email.GetMetrics())
+            foreach(IMetricsProvider metric in email.GetMetrics(Convert.ToInt32(_days.Value)))
             {
                 ListViewItem item = _metrics.Items.Add(metric.Name);
 

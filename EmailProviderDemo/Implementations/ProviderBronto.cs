@@ -113,7 +113,7 @@ namespace EmailProviderDemo
             client.addDeliveriesAsync(header, deliveries.ToArray());
         }
 
-        public IEnumerable<IMetricsProvider> GetMetrics()
+        public IEnumerable<IMetricsProvider> GetMetrics(int days)
         {
             return new List<IMetricsProvider>();
         }

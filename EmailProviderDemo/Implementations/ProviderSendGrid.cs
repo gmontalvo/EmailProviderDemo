@@ -49,12 +49,12 @@ namespace EmailProviderDemo
             transport.DeliverAsync(_email).ConfigureAwait(false);
         }
 
-        public IEnumerable<IMetricsProvider> GetMetrics()
+        public IEnumerable<IMetricsProvider> GetMetrics(int days)
         {
             List<IMetricsProvider> list = new List<IMetricsProvider>();
 
             string payload = string.Empty;
-            Task task = Task.Run(new Action(() => { payload = GetPayload().Result; }));
+            Task task = Task.Run(new Action(() => { payload = GetPayload(days).Result; }));
             task.Wait();
 
             JArray jobjects = JArray.Parse(payload);
@@ -79,9 +79,9 @@ namespace EmailProviderDemo
             return list;
         }
 
-        private async Task<string> GetPayload()
+        private async Task<string> GetPayload(int days)
         {
-            string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(7));
+            string start = string.Format("{0:yyyy-MM-dd}", DateTime.Now - TimeSpan.FromDays(days));
             string end = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
 
             Client client = new Client(ConfigurationManager.AppSettings[GetType().Name]);
