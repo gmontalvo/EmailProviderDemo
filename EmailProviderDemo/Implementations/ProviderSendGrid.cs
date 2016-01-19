@@ -22,16 +22,12 @@ namespace EmailProviderDemo
         {
             SendGridMessage client = new SendGridMessage();
             client.From = new MailAddress(From);
+            client.AddTo(To);
             client.Subject = Subject;
             client.Text = Regex.Replace(Body, "<.*?>", string.Empty);
             client.Html = Body.Replace("\r\n", "<br>");
             client.EnableClickTracking();
             client.EnableOpenTracking();
-
-            foreach(string email in To)
-            {
-                client.AddTo(email);
-            }
 
             Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
             transport.DeliverAsync(client).ConfigureAwait(false);
