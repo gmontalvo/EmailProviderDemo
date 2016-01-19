@@ -43,7 +43,7 @@ namespace EmailProviderDemo
             IEmailProvider email = EmailProviderFactory.Get(provider);
 
             email.From = _from.Text;
-            email.AddTo(_to.Text.Split(';').ToList());
+            email.To = _to.Text.Split(';').ToList();
             email.Subject = _subject.Text;
             email.Body = _message.Text;
 

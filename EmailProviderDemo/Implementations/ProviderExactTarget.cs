@@ -10,22 +10,11 @@ namespace EmailProviderDemo
 {
     class ProviderExactTarget : IEmailProvider
     {
-        List<string> _emails = new List<string>();
         Dictionary<int, string> _names = new Dictionary<int, string>();
 
         public string From { get; set; }
-
-        public void AddTo(IEnumerable<string> emails)
-        {
-            foreach(string email in emails)
-            {
-                if (!_emails.Contains(email))
-                {
-                    _emails.Add(email);
-                }
-            }
-        }
-
+        public IEnumerable<string> To { get; set; }
+    
         public string Subject { get; set; }
         public string Body { get;  set ; }
 
@@ -38,7 +27,7 @@ namespace EmailProviderDemo
             ///////////////////////////////////////////////////////////////////
 
             Subject = string.Format("Test: {0:yyyy-MM-dd HH:mm:ss}", DateTime.Now);
-            _emails = new List<string>() { "gregory.montalvo@gmail.com" };
+            To = new List<string>() { "gregory.montalvo@gmail.com" };
             Body = "<b>BOLD TEXT</b>\r\n\r\ntest\r\ntest\r\ntest\r\n";
             From = "gregory.montalvo@inmar.com";
 
@@ -59,7 +48,7 @@ namespace EmailProviderDemo
 
             List<ET_Subscriber> subscribers = new List<ET_Subscriber>();
 
-            foreach (string recipient in _emails)
+            foreach (string recipient in To)
             {
                 if (GetEmailID(client, recipient) == 0)
                 {

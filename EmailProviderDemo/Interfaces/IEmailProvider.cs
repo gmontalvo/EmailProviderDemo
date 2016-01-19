@@ -5,7 +5,7 @@ namespace EmailProviderDemo
     interface IEmailProvider
     {
         string From { get; set; }
-        void AddTo(IEnumerable<string> emails);
+        IEnumerable<string> To { get; set; }
 
         string Subject { get; set; }
         string Body { get; set; }

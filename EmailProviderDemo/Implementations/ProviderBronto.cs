@@ -7,20 +7,8 @@ namespace EmailProviderDemo
 {
     class ProviderBronto : IEmailProvider
     {
-        List<string> _emails = new List<string>();
-
         public string From { get; set; }
-
-        public void AddTo(IEnumerable<string> emails)
-        {
-            foreach(string email in emails)
-            {
-                if (!_emails.Contains(email))
-                {
-                    _emails.Add(email);
-                }
-            }
-        }
+        public IEnumerable<string> To { get; set; }
 
         public string Subject { get; set; }
         public string Body { get; set; }
@@ -45,7 +33,7 @@ namespace EmailProviderDemo
 
             List<contactObject> contactValues = new List<contactObject>();
 
-            foreach(string email in _emails)
+            foreach(string email in To)
             {
                 contactObject co = new contactObject();
                 co.email = email;

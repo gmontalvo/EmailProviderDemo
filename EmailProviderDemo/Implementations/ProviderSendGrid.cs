@@ -12,41 +12,29 @@ namespace EmailProviderDemo
 {
     class ProviderSendGrid : IEmailProvider
     {
-        SendGridMessage _email = new SendGridMessage();
+        public string From { get; set; }
+        public IEnumerable<string> To { get; set; }
 
-        public string From
-        {
-            get { return _email.From.Address; }
-            set { _email.From = new MailAddress(value);  }
-        }
-
-        public void AddTo(IEnumerable<string> emails)
-        {
-            _email.AddTo(emails);
-        }
-
-        public string Subject
-        {
-            get { return _email.Subject; }
-            set { _email.Subject = value; }
-        }
-
-        public string Body
-        {
-            get { return _email.Html; }
-            set { _email.Html = value; }
-        }
+        public string Subject { get; set; }
+        public string Body { get; set; }
 
         public void Send()
         {
-            _email.EnableClickTracking();
-            _email.EnableOpenTracking();
+            SendGridMessage client = new SendGridMessage();
+            client.From = new MailAddress(From);
+            client.Subject = Subject;
+            client.Text = Regex.Replace(Body, "<.*?>", string.Empty);
+            client.Html = Body.Replace("\r\n", "<br>");
+            client.EnableClickTracking();
+            client.EnableOpenTracking();
 
-            _email.Text = Regex.Replace(_email.Html, "<.*?>", string.Empty);
-            _email.Html = _email.Html.Replace("\r\n", "<br>");
+            foreach(string email in To)
+            {
+                client.AddTo(email);
+            }
 
             Web transport = new Web(ConfigurationManager.AppSettings[GetType().Name]);
-            transport.DeliverAsync(_email).ConfigureAwait(false);
+            transport.DeliverAsync(client).ConfigureAwait(false);
         }
 
         public IEnumerable<IMetricsProvider> GetMetrics(int days)
