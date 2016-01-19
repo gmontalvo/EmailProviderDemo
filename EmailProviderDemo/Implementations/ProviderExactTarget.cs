@@ -31,124 +31,97 @@ namespace EmailProviderDemo
 
         public void Send()
         {
+            ///////////////////////////////////////////////////////////////////
+            //
+            // setup test variables, so I don't have to re-type during test
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            Subject = string.Format("Test: {0:yyyy-MM-dd HH:mm:ss}", DateTime.Now);
+            _emails = new List<string>() { "gregory.montalvo@gmail.com" };
+            Body = "<b>BOLD TEXT</b>\r\n\r\ntest\r\ntest\r\ntest\r\n";
+            From = "gregory.montalvo@inmar.com";
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // setup variables used throughout the routine
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_Client client = CreateClient();
+            Body += "\r\nThis email was sent by:\r\n%%Member_Busname%%\r\n%%Member_Addr%%\r\n%%Member_City%%, %%Member_State%%, %%Member_PostalCode%%, %%Member_Country%%";
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // add emails to subscriber list
+            //
+            ///////////////////////////////////////////////////////////////////
+
             List<ET_Subscriber> subscribers = new List<ET_Subscriber>();
 
-            foreach (string email in _emails)
+            foreach (string recipient in _emails)
             {
+                if (GetEmailID(client, recipient) == 0)
+                {
+                    ET_Subscriber contact = new ET_Subscriber();
+                    contact.AuthStub = client;
+                    contact.EmailAddress = recipient;
+                    contact.SubscriberKey = recipient;
+
+                    contact.Post();
+                }
+
                 ET_Subscriber subscriber = new ET_Subscriber();
-                subscriber.EmailAddress = email;
-                subscriber.SubscriberKey = email;
+                subscriber.EmailAddress = recipient;
+                subscriber.SubscriberKey = recipient;
 
                 subscribers.Add(subscriber);
             }
 
+            ///////////////////////////////////////////////////////////////////
+            //
+            // add email to email list
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_Email email = new ET_Email();
+            email.AuthStub = client;
+            email.Name = string.Format("{0:yyyy-MM-dd HH:mm:ss}", DateTime.Now);
+            email.Subject = Subject;
+            email.HTMLBody = Body.Replace("\r\n", "<br>");
+            email.TextBody = Regex.Replace(Body, "<.*?>", string.Empty);
+            email.EmailType = "html";
+
+            PostReturn response = email.Post();
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // create triggered email
+            //
+            ///////////////////////////////////////////////////////////////////
+
             ET_TriggeredSend triggered = new ET_TriggeredSend();
-            triggered.AuthStub = CreateClient();
-            triggered.Subscribers = subscribers.ToArray();
+            triggered.AuthStub = client;
+            triggered.CustomerKey = Convert.ToString(Guid.NewGuid());
+            triggered.FromAddress = From;
+            triggered.Email = new ET_Email() { ID = response.Results[0].NewID };
+            triggered.SendClassification = new ET_SendClassification() { CustomerKey = Convert.ToString(Guid.NewGuid()) };
 
-            for (int i = 0; i < triggered.Subscribers.Length; i++)
-            {
-                triggered.Subscribers[i].Owner = new Owner();
-                triggered.Subscribers[i].Owner.FromAddress = From;
-                triggered.Subscribers[i].Attributes = new FuelSDK.Attribute[2];
+            response = triggered.Post();
 
-                triggered.Subscribers[i].Attributes[1] = new FuelSDK.Attribute();
-                triggered.Subscribers[i].Attributes[1].Name = "Subject";
-                triggered.Subscribers[i].Attributes[1].Value = Subject;
+            ///////////////////////////////////////////////////////////////////
+            //
+            // send triggered email
+            //
+            ///////////////////////////////////////////////////////////////////
 
-                triggered.Subscribers[i].Attributes[0] = new FuelSDK.Attribute();
-                triggered.Subscribers[i].Attributes[0].Name = "HTML_Content";
-                triggered.Subscribers[i].Attributes[0].Value = Body.Replace("\r\n", "<br>");
-            }
+            ET_TriggeredSend send = new ET_TriggeredSend();
+            send.AuthStub = client;
+            send.CustomerKey = triggered.CustomerKey;
+            send.Subscribers = subscribers.ToArray();
 
-            triggered.Send();
-
-            //ET_Email email = new ET_Email();
-            //email.AuthStub = client;
-            //email.Subject = Subject;
-            //email.EmailType = "HTML";
-            //email.IsHTMLPaste = true;
-            //email.SyncTextWithHTML = true;
-            //email.TextBody = Regex.Replace(Body, "<.*?>", string.Empty);
-            //email.HTMLBody = Body.Replace("\r\n", "<br>");
-
-            //PostReturn results = email.Post();
-
-            //int emailID = results.Results[0].NewID;
-            //string key = Convert.ToString(Guid.NewGuid());
-            //List<ET_Subscriber> subscribers = new List<ET_Subscriber>();
-
-            //_subscribers.ForEach(subscriber =>
-            //{
-            //    subscribers.Add(new ET_Subscriber() { EmailAddress = subscriber, SubscriberKey = subscriber });
-            //});
-
-            //ET_Send send = new ET_Send();
-            //send.AuthStub = client;
-            //send.Subject = Subject;
-
-            //send.Email.EmailType = "HTML";
-            //send.Email.IsHTMLPaste = true;
-            //send.Email.SyncTextWithHTML = true;
-            //send.Email.TextBody = Regex.Replace(Body, "<.*?>", string.Empty);
-            //send.Email.HTMLBody = Body.Replace("\r\n", "<br>");
-
-            //send.EmailSendDefinition.FromAddress = From;
-            //send.EmailSendDefinition.t
-            //send.Post();
-
-            //ET_TriggeredSend triggeredsend = new ET_TriggeredSend();
-            //triggeredsend.AuthStub = client;
-            //triggeredsend.Name = key;
-            //triggeredsend.CustomerKey = "SDK Created TriggeredSend";
-            //triggeredsend.Email = new ET_Email() { ID = emailID };
-            //triggeredsend.SendClassification = new ET_SendClassification() { CustomerKey = "2222" };
-            //PostReturn prtriggeredsend = triggeredsend.Post();
-            //Console.WriteLine("Post Status: " + prtriggeredsend.Status.ToString());
-
-            //ET_TriggeredSend triggered = new ET_TriggeredSend();
-            //triggered.AuthStub = client;
-            //triggered.CustomerKey = Convert.ToString(Guid.NewGuid());
-            //triggered.Subscribers = subscribers.ToArray();
-
-            //SendReturn send = triggered.Send();
-
-            //private SendReturn SendEmail(ET_Client sendingClient, String triggedSendDefinition, EmailTemplateData emailToSend) {
-            ////this is used in a couple of places to extract it here
-            //string emailSendID = Convert.ToString(emailToSend.ETSubscriberKey);
-
-            //ET_TriggeredSend tsdSend = new ET_TriggeredSend();
-            //tsdSend.AuthStub = sendingClient;
-            //tsdSend.Name = triggedSendDefinition;
-            //tsdSend.CustomerKey = triggedSendDefinition;
-
-            ////create the subscriber....
-            //tsdSend.Subscribers = new ET_Subscriber[] {
-            //    new ET_Subscriber() {
-            //        EmailAddress = emailToSend.EmailToAddress, SubscriberKey = emailSendID
-            //    }
-            //};
-
-            ////The HTML_Content is the body of the email etc.
-            //tsdSend.Subscribers[0].Owner = new Owner();
-            //tsdSend.Subscribers[0].Owner.FromAddress = emailToSend.EmailFromAddress;
-            //tsdSend.Subscribers[0].Owner.FromName = emailToSend.EmailFromName;
-            //tsdSend.Subscribers[0].Attributes = new FuelSDK.Attribute[2];
-            //tsdSend.Subscribers[0].Attributes[0] = new FuelSDK.Attribute();
-            //tsdSend.Subscribers[0].Attributes[0].Name = "HTML_Content";
-            //tsdSend.Subscribers[0].Attributes[0].Value = emailToSend.EmailBodyHTMLContent;
-            //tsdSend.Subscribers[0].Attributes[1] = new FuelSDK.Attribute();
-            //tsdSend.Subscribers[0].Attributes[1].Name = "Subject";
-            //tsdSend.Subscribers[0].Attributes[1].Value = emailToSend.EmailSubject;
-
-            ////********************SEND THE EMAIL*************************
-            ////this is where the latency occurs.
-            //SendReturn srSend = tsdSend.Send();
-
-            ////there is some other code in here that records send results.
-
-            //return srSend;
-            // }        
+            response = send.Send();
+            response = response;
         }
 
         public IEnumerable<IMetricsProvider> GetMetrics(int days)
@@ -344,6 +317,34 @@ namespace EmailProviderDemo
             }
 
             return _names[sendID];
+        }
+
+        private int GetEmailID(ET_Client client, string email)
+        {
+            int emailID = 0;
+
+            ET_Subscriber subscriber = new ET_Subscriber();
+            subscriber.AuthStub = client;
+
+            subscriber.Props = new string[]
+            {
+                "ID",
+                "SubscriberKey",
+            };
+
+            subscriber.SearchFilter = new SimpleFilterPart()
+            {
+                Property = "SubscriberKey",
+                SimpleOperator = SimpleOperators.equals,
+                Value = new string[] { Convert.ToString(email) },
+            };
+
+            GetReturn results = subscriber.Get();
+
+            if (results.Results.Count() > 0)
+                emailID = results.Results[0].ID;
+
+            return emailID;
         }
     }
 }
