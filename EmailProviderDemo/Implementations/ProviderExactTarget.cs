@@ -22,18 +22,8 @@ namespace EmailProviderDemo
         {
             ///////////////////////////////////////////////////////////////////
             //
-            // setup test variables, so I don't have to re-type during test
-            //
-            ///////////////////////////////////////////////////////////////////
-
-            Subject = string.Format("Test: {0:yyyy-MM-dd HH:mm:ss}", DateTime.Now);
-            To = new List<string>() { "gregory.montalvo@gmail.com" };
-            Body = "<b>BOLD TEXT</b>\r\n\r\ntest\r\ntest\r\ntest\r\n";
-            From = "gregory.montalvo@inmar.com";
-
-            ///////////////////////////////////////////////////////////////////
-            //
-            // setup variables used throughout the routine
+            // setup the client stub, and add requisite
+            // parameters to html body
             //
             ///////////////////////////////////////////////////////////////////
 
@@ -42,7 +32,7 @@ namespace EmailProviderDemo
 
             ///////////////////////////////////////////////////////////////////
             //
-            // add emails to subscriber list
+            // use emails to setup the list of subscribers
             //
             ///////////////////////////////////////////////////////////////////
 
@@ -50,16 +40,6 @@ namespace EmailProviderDemo
 
             foreach (string recipient in To)
             {
-                if (!IsSubscriber(client, recipient))
-                {
-                    ET_Subscriber contact = new ET_Subscriber();
-                    contact.AuthStub = client;
-                    contact.EmailAddress = recipient;
-                    contact.SubscriberKey = recipient;
-
-                    contact.Post();
-                }
-
                 ET_Subscriber subscriber = new ET_Subscriber();
                 subscriber.EmailAddress = recipient;
                 subscriber.SubscriberKey = recipient;
@@ -69,7 +49,7 @@ namespace EmailProviderDemo
 
             ///////////////////////////////////////////////////////////////////
             //
-            // add email to email list
+            // create email within ExactTarget email list
             //
             ///////////////////////////////////////////////////////////////////
 
@@ -81,22 +61,38 @@ namespace EmailProviderDemo
             email.TextBody = Regex.Replace(Body, "<.*?>", string.Empty);
             email.EmailType = "html";
 
-            PostReturn response = email.Post();
+            PostReturn results = email.Post();
 
             ///////////////////////////////////////////////////////////////////
             //
-            // create triggered email
+            // create triggered email within ExactTarget triggered email list
             //
             ///////////////////////////////////////////////////////////////////
 
-            ET_TriggeredSend triggered = new ET_TriggeredSend();
-            triggered.AuthStub = client;
-            triggered.CustomerKey = Convert.ToString(Guid.NewGuid());
-            triggered.FromAddress = From;
-            triggered.Email = new ET_Email() { ID = response.Results[0].NewID };
-            triggered.SendClassification = new ET_SendClassification() { CustomerKey = Convert.ToString(Guid.NewGuid()) };
+            ET_TriggeredSend create = new ET_TriggeredSend();
+            create.AuthStub = client;
+            create.Name = email.Name;
+            create.AutoAddSubscribers = true;
+            create.AutoAddSubscribersSpecified = true;
+            create.List = new ET_List() { ID = 228 };
+            create.CustomerKey = Convert.ToString(Guid.NewGuid());
+            create.Email = new ET_Email() { ID = results.Results[0].NewID };
+            create.SendClassification = new ET_SendClassification() { CustomerKey = "Default Commercial" };
 
-            response = triggered.Post();
+            create.Post();
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // patch triggered email (to set active)
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            ET_TriggeredSend update = new ET_TriggeredSend();
+            update.AuthStub = client;
+            update.CustomerKey = create.CustomerKey;
+            update.TriggeredSendStatus = TriggeredSendStatusEnum.Active;
+
+            update.Patch();
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -106,11 +102,10 @@ namespace EmailProviderDemo
 
             ET_TriggeredSend send = new ET_TriggeredSend();
             send.AuthStub = client;
-            send.CustomerKey = triggered.CustomerKey;
+            send.CustomerKey = update.CustomerKey;
             send.Subscribers = subscribers.ToArray();
 
-            response = send.Send();
-            response = response;
+            send.Send();
         }
 
         public IEnumerable<IMetricsProvider> GetMetrics(int days)
@@ -306,27 +301,6 @@ namespace EmailProviderDemo
             }
 
             return _names[sendID];
-        }
-
-        private bool IsSubscriber(ET_Client client, string email)
-        {
-            ET_Subscriber subscriber = new ET_Subscriber();
-            subscriber.AuthStub = client;
-
-            subscriber.Props = new string[]
-            {
-                "ID",
-                "SubscriberKey",
-            };
-
-            subscriber.SearchFilter = new SimpleFilterPart()
-            {
-                Property = "SubscriberKey",
-                SimpleOperator = SimpleOperators.equals,
-                Value = new string[] { email },
-            };
-
-            return subscriber.Get().Results.Count() != 0;
         }
     }
 }
