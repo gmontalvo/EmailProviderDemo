@@ -50,7 +50,7 @@ namespace EmailProviderDemo
 
             foreach (string recipient in To)
             {
-                if (GetEmailID(client, recipient) == 0)
+                if (!IsSubscriber(client, recipient))
                 {
                     ET_Subscriber contact = new ET_Subscriber();
                     contact.AuthStub = client;
@@ -308,10 +308,8 @@ namespace EmailProviderDemo
             return _names[sendID];
         }
 
-        private int GetEmailID(ET_Client client, string email)
+        private bool IsSubscriber(ET_Client client, string email)
         {
-            int emailID = 0;
-
             ET_Subscriber subscriber = new ET_Subscriber();
             subscriber.AuthStub = client;
 
@@ -325,15 +323,10 @@ namespace EmailProviderDemo
             {
                 Property = "SubscriberKey",
                 SimpleOperator = SimpleOperators.equals,
-                Value = new string[] { Convert.ToString(email) },
+                Value = new string[] { email },
             };
 
-            GetReturn results = subscriber.Get();
-
-            if (results.Results.Count() > 0)
-                emailID = results.Results[0].ID;
-
-            return emailID;
+            return subscriber.Get().Results.Count() != 0;
         }
     }
 }
