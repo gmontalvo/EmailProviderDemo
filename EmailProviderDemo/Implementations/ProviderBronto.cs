@@ -145,7 +145,7 @@ namespace EmailProviderDemo
 
             ///////////////////////////////////////////////////////////////////
             //
-            // Deserialize deliverFilterObjects into JSONObject type that ProviderMetrics expects
+            // Extract deliverObjects metrics into JSONObject type that ProviderMetrics expects
             //
             ///////////////////////////////////////////////////////////////////
             JArray jobjects = new JArray();
