@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace EmailProviderDemo
 {
@@ -103,7 +105,82 @@ namespace EmailProviderDemo
 
         public IEnumerable<IMetricsProvider> GetMetrics(int days)
         {
-            return new List<IMetricsProvider>();
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // Instantiate the client
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            sessionHeader header = new sessionHeader();
+            BrontoSoapPortTypeClient client = new BrontoSoapPortTypeClient();
+            header.sessionId = client.login(ConfigurationManager.AppSettings[GetType().Name]);
+
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // Retrieve the contact for which you need the metrics.
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            contactFilter cf = new contactFilter();
+            cf.id = new String[] { "4a8e4dc1-e38f-438b-b8b5-75e46799bc9c" };
+            readContacts rc = new readContacts();
+            rc.filter = cf;
+            contactObject[] co = client.readContacts(header, rc);
+
+            contactObject mycontact = co[0];
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // Create a deliverFilter and read all deliverObjects
+            //
+            ///////////////////////////////////////////////////////////////////
+
+            deliveryFilter df = new deliveryFilter();
+            df.deliveryType = new String[] { "normal","test","automated","split","transactional","triggered" };
+            readDeliveries rd = new readDeliveries();
+            rd.filter = df;
+            deliveryObject[] dos = client.readDeliveries(header, rd);
+
+            ///////////////////////////////////////////////////////////////////
+            //
+            // Deserialize deliverFilterObjects into JSONObject type that ProviderMetrics expects
+            //
+            ///////////////////////////////////////////////////////////////////
+            JArray jobjects = new JArray();
+            if (dos!=null)
+            {
+                foreach (deliveryObject doj in dos)
+                {
+                    jobjects.Add(JObject.FromObject(new {
+                        Name = doj.messageId,
+                        Bounces = doj.numBounces,
+                        Clicks = doj.numClicks,
+                        Opens = doj.numOpens,
+                        Sends = doj.numSends,
+                        //for now all unsubscribes is defaulted to zero ad deliveryObject doesn't return that
+                        Unsubscribes = "0"
+                    }));
+                }
+            }
+
+
+            List<IMetricsProvider> list = new List<IMetricsProvider>();
+            foreach (JObject jobject in jobjects)
+            {
+                ProviderMetrics item = new ProviderMetrics();
+                item.Name = (string)jobject.GetValue("Name");
+                item.Bounces = (int)jobject.GetValue("Bounces");
+                item.Clicks = (int)jobject.GetValue("Clicks");
+                item.Opens = (int)jobject.GetValue("Opens");
+                item.Sends = (int)jobject.GetValue("Sends");
+                item.Unsubscribes = (int)jobject.GetValue("Unsubscribes");
+                list.Add(item);
+            }
+
+            return list;
+            
         }
     }
 }

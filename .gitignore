@@ -245,4 +245,4 @@ FuelSDK-CSharp/
 sendgrid-csharp/
 
 # temporarily ignoring app.config
-EmailProviderDemo/App.config
+./App.config
