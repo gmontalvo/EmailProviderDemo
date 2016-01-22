@@ -151,7 +151,7 @@ namespace EmailProviderDemo
             ///////////////////////////////////////////////////////////////////
             List<IMetricsProvider> list = new List<IMetricsProvider>();
             try
-            { 
+            {
                 foreach (deliveryObject doj in dos)
                 {
                     ProviderMetrics item = new ProviderMetrics();
@@ -160,8 +160,16 @@ namespace EmailProviderDemo
                     item.Clicks = (int)doj.numClicks;
                     item.Opens = (int)doj.numOpens;
                     item.Sends = (int)doj.numSends;
-                    // deliveryObject doesn't have unsubscribes #s, hence defaulting to zero
-                    item.Unsubscribes = 0;
+                    // read unsubscribes
+                    unsubscribeFilter uf = new unsubscribeFilter();
+                    uf.deliveryId = doj.id;
+                    readUnsubscribes ru = new readUnsubscribes();
+                    ru.filter = uf;
+                    ru.pageNumber = 1;
+                    if (client.readUnsubscribes(header, ru) == null)
+                        item.Unsubscribes = 0;
+                    else
+                    item.Unsubscribes = client.readUnsubscribes(header, ru).Length;
                     list.Add(item);
                 }
             }
