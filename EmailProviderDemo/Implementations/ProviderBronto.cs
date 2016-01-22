@@ -124,7 +124,7 @@ namespace EmailProviderDemo
             ///////////////////////////////////////////////////////////////////
 
             contactFilter cf = new contactFilter();
-            cf.id = new String[] { "4a8e4dc1-e38f-438b-b8b5-75e46799bc9c" };
+            cf.id = new string[] { "4a8e4dc1-e38f-438b-b8b5-75e46799bc9c" };
             readContacts rc = new readContacts();
             rc.filter = cf;
             contactObject[] co = client.readContacts(header, rc);
@@ -138,8 +138,9 @@ namespace EmailProviderDemo
             ///////////////////////////////////////////////////////////////////
 
             deliveryFilter df = new deliveryFilter();
-            df.deliveryType = new String[] { "normal","test","automated","split","transactional","triggered" };
+            df.deliveryType = new string[] { "normal","test","automated","split","transactional","triggered" };
             readDeliveries rd = new readDeliveries();
+       
             rd.filter = df;
             deliveryObject[] dos = client.readDeliveries(header, rd);
 
@@ -148,39 +149,36 @@ namespace EmailProviderDemo
             // Extract deliverObjects metrics into JSONObject type that ProviderMetrics expects
             //
             ///////////////////////////////////////////////////////////////////
-            JArray jobjects = new JArray();
-            if (dos!=null)
-            {
+            List<IMetricsProvider> list = new List<IMetricsProvider>();
+            try
+            { 
                 foreach (deliveryObject doj in dos)
                 {
-                    jobjects.Add(JObject.FromObject(new {
-                        Name = doj.messageId,
-                        Bounces = doj.numBounces,
-                        Clicks = doj.numClicks,
-                        Opens = doj.numOpens,
-                        Sends = doj.numSends,
-                        //for now all unsubscribes is defaulted to zero ad deliveryObject doesn't return that
-                        Unsubscribes = "0"
-                    }));
+                    ProviderMetrics item = new ProviderMetrics();
+                    item.Name = doj.messageId;
+                    item.Bounces = (int)doj.numBounces;
+                    item.Clicks = (int)doj.numClicks;
+                    item.Opens = (int)doj.numOpens;
+                    item.Sends = (int)doj.numSends;
+                    // deliveryObject doesn't have unsubscribes #s, hence defaulting to zero
+                    item.Unsubscribes = 0;
+                    list.Add(item);
                 }
             }
-
-
-            List<IMetricsProvider> list = new List<IMetricsProvider>();
-            foreach (JObject jobject in jobjects)
+            catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 ProviderMetrics item = new ProviderMetrics();
-                item.Name = (string)jobject.GetValue("Name");
-                item.Bounces = (int)jobject.GetValue("Bounces");
-                item.Clicks = (int)jobject.GetValue("Clicks");
-                item.Opens = (int)jobject.GetValue("Opens");
-                item.Sends = (int)jobject.GetValue("Sends");
-                item.Unsubscribes = (int)jobject.GetValue("Unsubscribes");
+                item.Name = "null";
+                item.Bounces = 0;
+                item.Clicks = 0;
+                item.Opens = 0;
+                item.Sends = 0;
+                item.Unsubscribes = 0;
                 list.Add(item);
             }
-
             return list;
-            
+          
         }
     }
 }
