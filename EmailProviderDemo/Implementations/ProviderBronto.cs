@@ -128,9 +128,7 @@ namespace EmailProviderDemo
             readContacts rc = new readContacts();
             rc.filter = cf;
             contactObject[] co = client.readContacts(header, rc);
-
             contactObject mycontact = co[0];
-
             ///////////////////////////////////////////////////////////////////
             //
             // Create a deliverFilter and read all deliverObjects
@@ -146,7 +144,7 @@ namespace EmailProviderDemo
 
             ///////////////////////////////////////////////////////////////////
             //
-            // Extract deliverObjects metrics into JSONObject type that ProviderMetrics expects
+            // Extract deliverObjects into ProviderMetrics
             //
             ///////////////////////////////////////////////////////////////////
             List<IMetricsProvider> list = new List<IMetricsProvider>();
@@ -155,6 +153,17 @@ namespace EmailProviderDemo
                 foreach (deliveryObject doj in dos)
                 {
                     ProviderMetrics item = new ProviderMetrics();
+                    /*
+                    deliveryRecipientFilter drf = new deliveryRecipientFilter();
+                    drf.deliveryId = doj.id;
+                    readDeliveryRecipients rdr = new readDeliveryRecipients();
+                    rdr.filter = drf;
+                    deliveryRecipientStatObject[] drso = client.readDeliveryRecipients(header, rdr);
+                    */
+                    // Once we receive the deliveryRecipientStatObject, we have to check
+                    // if this object has click/send/bounce and store the contactId accordingly
+
+
                     item.Name = doj.messageId;
                     item.Bounces = (int)doj.numBounces;
                     item.Clicks = (int)doj.numClicks;
@@ -172,6 +181,8 @@ namespace EmailProviderDemo
                     item.Unsubscribes = client.readUnsubscribes(header, ru).Length;
                     list.Add(item);
                 }
+                
+
             }
             catch (Exception e)
             {
