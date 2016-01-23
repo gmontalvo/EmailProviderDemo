@@ -153,6 +153,12 @@ namespace EmailProviderDemo
                 foreach (deliveryObject doj in dos)
                 {
                     ProviderMetrics item = new ProviderMetrics();
+
+                    //deliveryRecipientObject[] dro = doj.recipients;
+                    // id can be contact id, list id or segment id
+                    //dro[0].id
+                    // if contactId, there are metrics by contact, but that doesn't tell the full story
+
                     /*
                     deliveryRecipientFilter drf = new deliveryRecipientFilter();
                     drf.deliveryId = doj.id;
